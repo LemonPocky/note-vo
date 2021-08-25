@@ -18,6 +18,16 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
+    // List of ratings this user has made
+    ratings: {
+      type: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'Rating',
+        },
+      ],
+      validate: [ratingsLimit, 'Number of ratings exceeds 100000'],
+    },
   },
   // set this to use virtual below
   {
@@ -26,6 +36,11 @@ const UserSchema = new Schema(
     },
   }
 );
+
+// Checks if the length of the ratings array is below 100,000
+function ratingsLimit(val) {
+  return val.length <= 100000;
+}
 
 // hash user password
 UserSchema.pre('save', async function (next) {
