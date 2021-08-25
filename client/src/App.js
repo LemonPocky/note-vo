@@ -7,7 +7,7 @@ import {
   ApolloProvider,
   createHttpLink,
 } from '@apollo/client';
-// import COMPONENT_NAME_HERE from './path/to/component';
+import Profile from './pages/Profile';
 
 const client = new ApolloClient({
   uri: '/graphql',
@@ -20,7 +20,7 @@ function App() {
       <Router>
         <>
           <Switch>
-            {/* <Route exact path="/" component={COMPONENT_NAME_HERE} /> */}
+            <Route exact path="/" component={Profile} />
             <Route render={() => <h1 className="display-2">Wrong page!</h1>} />
           </Switch>
         </>
