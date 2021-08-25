@@ -38,8 +38,10 @@ function App() {
       <Router>
         <>
           <Switch>
-            <Route exact path="/" component={Homepage} />
-            <Route exact path="/profile" component={Profile} />
+            {/* <Route exact path="/" component={Homepage} /> */}
+            <Route exact path="/profile">
+              <Profile />
+            </Route>
             <Route render={() => <h1 className="display-2">Wrong page!</h1>} />
           </Switch>
         </>
