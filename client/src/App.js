@@ -1,16 +1,34 @@
 import React from 'react';
 import 'semantic-ui-css/semantic.min.css';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import Homepage from './pages/Homepage';
+import Profile from './pages/Profile';
+import { setContext } from '@apollo/client/link/context';
 import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
   createHttpLink,
 } from '@apollo/client';
-import Profile from './pages/Profile';
+
+const httpLink = createHttpLink({
+  uri: '/graphql',
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('id_token');
+
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
 
 const client = new ApolloClient({
-  uri: '/graphql',
+  link: authLink.concat(httpLink),
+
   cache: new InMemoryCache(),
 });
 
@@ -20,7 +38,8 @@ function App() {
       <Router>
         <>
           <Switch>
-            <Route exact path="/" component={Profile} />
+            <Route exact path="/" component={Homepage} />
+            <Route exact path="/profile" component={Profile} />
             <Route render={() => <h1 className="display-2">Wrong page!</h1>} />
           </Switch>
         </>
