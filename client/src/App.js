@@ -1,6 +1,7 @@
 import React from "react";
 import "semantic-ui-css/semantic.min.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
 import Homepage from "./pages/Homepage";
 import Profile from "./pages/Profile";
 import { setContext } from "@apollo/client/link/context";
@@ -40,9 +41,7 @@ function App() {
         <>
           <Switch>
             {/* <Route exact path="/" component={Homepage} /> */}
-            <Route exact path="/">
-              <Modal />
-            </Route>
+            <Route exact path="/"></Route>
             <Route exact path="/profile">
               <Profile />
             </Route>
