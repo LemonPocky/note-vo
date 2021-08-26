@@ -1,54 +1,40 @@
-import React, { useState } from "react";
-import { useMutation } from "@apollo/client";
-import { Button, Header, Image, Modal } from "semantic-ui-react";
-import Auth from "../utils/auth";
+import React from "react";
+import { Form, Input, TextArea, Button, Select } from "semantic-ui-react";
 
-const LoginForm = () => {
-  const [userFormData, setUserFormData] = useState({ email: "", password: "" });
+const LoginForm = () => (
+  <Form>
+    <Form.Group widths="equal">
+      <Form.Field
+        id="form-input-control-username"
+        control={Input}
+        label="Username"
+        placeholder="Username"
+      />
+      <Form.Field
+        id="form-input-control-password"
+        control={Input}
+        label="Password"
+        placeholder="Password"
+      />
+    </Form.Group>
 
-  const [login, { error, data }] = useMutation();
-
-  const [validated] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setUserFormData({ ...userFormData, [name]: value });
-  };
-
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
-
-    try {
-      const { data } = await login({
-        variables: { ...userFormData },
-      });
-      Auth.login(data.login.token);
-    } catch (e) {
-      console.error(e);
-    }
-
-    // check if form has everything (as per react-bootstrap docs)
-
-    event.preventDefault();
-    event.stopPropagation();
-  };
-
-  return (
-    <>
-      <form class="ui form">
-        <div class="field">
-          <label>Username</label>
-          <input type="text" name="username" placeholder="Username"></input>
-        </div>{" "}
-        <div class="field">
-          <label>Password</label>
-          <input type="password" name="password" placeholder="Password"></input>
-        </div>
-      </form>
-      ;
-    </>
-  );
-};
+    <Form.Field
+      id="form-input-control-error-email"
+      control={Input}
+      label="Email"
+      placeholder="joe@schmoe.com"
+      error={{
+        content: "Please enter a valid email address",
+        pointing: "below",
+      }}
+    />
+    <Form.Field
+      id="form-button-control-public"
+      control={Button}
+      content="Submit"
+      label="Label with htmlFor"
+    />
+  </Form>
+);
 
 export default LoginForm;

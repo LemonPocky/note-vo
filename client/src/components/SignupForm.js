@@ -1,111 +1,80 @@
-const SignupForm = () => {
-  // set initial form state
-  const [userFormData, setUserFormData] = useState({
-    username: "",
-    email: "",
+import React, { Component } from "react";
+import { useMutation } from "@apollo/client";
+
+import Auth from "../utils/auth";
+
+import { Form } from "semantic-ui-react";
+
+class SignupForm extends Component {
+  state = {
+    name: "",
     password: "",
-  });
-  const [signupUser, { error, data }] = useMutation(SIGNUP_USER);
-  // set state for form validation
-  const [validated] = useState(false);
-  // set state for alert
-  const [showAlert, setShowAlert] = useState(false);
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setUserFormData({ ...userFormData, [name]: value });
+    email: "",
+    submittedName: "",
+    submittedEmail: "",
   };
 
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
+  handleChange = (e, { name, password, value }) =>
+    this.setState({ [name]: value });
 
-    try {
-      const { data } = await signupUser({
-        variables: { ...userFormData },
-      });
-      Auth.login(data.addUser.token);
-    } catch (e) {
-      console.error(e);
-    }
+  handleSubmit = () => {
+    const { name, password, email } = this.state;
 
-    event.preventDefault();
-    event.stopPropagation();
+    this.setState({
+      submittedName: name,
+      submittedPassword: password,
+      submittedEmail: email,
+    });
   };
 
-  return (
-    <>
-      {/* This is needed for the validation functionality above */}
-      <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
-        {/* show alert if server response is bad */}
-        <Alert
-          dismissible
-          onClose={() => setShowAlert(false)}
-          show={showAlert}
-          variant="danger"
-        >
-          Something went wrong with your signup!
-        </Alert>
+  render() {
+    const {
+      username,
+      password,
+      email,
+      submittedName,
+      submittedPassword,
+      submittedEmail,
+    } = this.state;
 
-        <Form.Group>
-          <Form.Label htmlFor="username">Username</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Your username"
-            name="username"
-            onChange={handleInputChange}
-            value={userFormData.username}
-            required
-          />
-          <Form.Control.Feedback type="invalid">
-            Username is required!
-          </Form.Control.Feedback>
-        </Form.Group>
-
-        <Form.Group>
-          <Form.Label htmlFor="email">Email</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Your email address"
-            name="email"
-            onChange={handleInputChange}
-            value={userFormData.email}
-            required
-          />
-          <Form.Control.Feedback type="invalid">
-            Email is required!
-          </Form.Control.Feedback>
-        </Form.Group>
-
-        <Form.Group>
-          <Form.Label htmlFor="password">Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Your password"
-            name="password"
-            onChange={handleInputChange}
-            value={userFormData.password}
-            required
-          />
-          <Form.Control.Feedback type="invalid">
-            Password is required!
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Button
-          disabled={
-            !(
-              userFormData.username &&
-              userFormData.email &&
-              userFormData.password
-            )
-          }
-          type="submit"
-          variant="success"
-        >
-          Submit
-        </Button>
-      </Form>
-    </>
-  );
-};
+    return (
+      <div>
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Group>
+            <Form.Input
+              placeholder="Username"
+              name="username"
+              value={username}
+              onChange={this.handleChange}
+            />
+            <Form.Input
+              placeholder="Password"
+              name="password"
+              value={password}
+              onChange={this.handleChange}
+            />
+            <Form.Input
+              placeholder="Email"
+              name="email"
+              value={email}
+              onChange={this.handleChange}
+            />
+            <Form.Button content="Submit" />
+          </Form.Group>
+        </Form>
+        <strong>onChange:</strong>
+        <pre>{JSON.stringify({ username, password, email }, null, 2)}</pre>
+        <strong>onSubmit:</strong>
+        <pre>
+          {JSON.stringify(
+            { submittedName, submittedPassword, submittedEmail },
+            null,
+            2
+          )}
+        </pre>
+      </div>
+    );
+  }
+}
 
 export default SignupForm;
