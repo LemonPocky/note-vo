@@ -1,10 +1,11 @@
-import React from "react";
-import { Button, Header, Image, Modal } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Button, Header, Image, Modal, Message } from "semantic-ui-react";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 
-function ModalExampleModal() {
-  const [open, setOpen] = React.useState(false);
+function LoginAndSignupModal() {
+  const [open, setOpen] = useState(false);
+  const [showLogin, setShowLogin] = useState(true);
 
   return (
     <>
@@ -14,13 +15,29 @@ function ModalExampleModal() {
         open={open}
         trigger={<Button>Show Modal</Button>}
       >
-        <Modal.Header>Please Login or Signup</Modal.Header>
-        <Modal.Content image>
-          <LoginForm />
+        <Modal.Header>{showLogin ? "Login" : "Signup"}</Modal.Header>
+        <Modal.Content>
+          {showLogin ? <LoginForm /> : <SignupForm />}
+          <Message>
+            {showLogin ? "New to us? " : "Already have an account? "}
+
+            <button
+              style={{
+                border: "none",
+                backgroundColor: "transparent",
+                color: "blue",
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
+              onClick={() => setShowLogin((prevState) => !prevState)}
+            >
+              {showLogin ? "Sign up" : "Login"} Here
+            </button>
+          </Message>
         </Modal.Content>
       </Modal>
     </>
   );
 }
 
-export default ModalExampleModal;
+export default LoginAndSignupModal;
