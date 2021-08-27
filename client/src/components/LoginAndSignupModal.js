@@ -16,7 +16,7 @@ function LoginAndSignupModal({ open, setOpen }) {
         <Modal.Header>{showLogin ? "Login" : "Signup"}</Modal.Header>
         <Modal.Content>
           {showLogin ? (
-            <LoginForm />
+            <LoginForm open={open} setOpen={setOpen} />
           ) : (
             <SignupForm open={open} setOpen={setOpen} />
           )}

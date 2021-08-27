@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 
-import {
-  Form,
-  Input,
-  TextArea,
-  Button,
-  Select,
-  Message,
-} from "semantic-ui-react";
+import { Form, Input, Button } from "semantic-ui-react";
 
 const SignupForm = ({ open, setOpen }) => {
   const [inputs, setInputs] = useState({
@@ -41,7 +34,7 @@ const SignupForm = ({ open, setOpen }) => {
     } else {
       setValidEmail("");
     }
-    console.log(validEmail);
+    console.log(inputs);
     setOpen(false);
   };
 
