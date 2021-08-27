@@ -24,6 +24,7 @@ const typeDefs = gql`
   }
 
   type Rating {
+    _id: ID!
     rating: Int
     song: Song
     user: User
@@ -38,9 +39,14 @@ const typeDefs = gql`
     songId: String!
     title: String
     artists: [String]
-    album: Album
+    album: AlbumInput
     link: String
     previewUrl: String
+  }
+
+  input AlbumInput {
+    title: String
+    image: String
   }
 
   type Query {
