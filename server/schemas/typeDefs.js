@@ -53,7 +53,6 @@ const typeDefs = gql`
     addUser(username: String!, email: String!, password: String!): Auth
     login(username: String!, password: String!): Auth
     addRating(songId: String, rating: Int): Rating
-    removeBook(bookId: ID!): User
     addSong(song: SongInput): Song
   }
 `;

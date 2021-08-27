@@ -50,14 +50,14 @@ SongSchema.virtual('ratings', {
 
 // middleware to set expiration date when saved
 SongSchema.pre('save', async function (next) {
-  // Set expiration to one week from now and conver to Javascript Date
+  // Set expiration to one week from now and convert to Javascript Date
   this.expiration = dayjs().add(1, 'week').toDate();
   next();
 });
 
 // middleware to set expiration date when updated
 SongSchema.pre('updateOne', async function (next) {
-  // Set expiration to one week from now and conver to Javascript Date
+  // Set expiration to one week from now and convert to Javascript Date
   this.expiration = dayjs().add(1, 'week').toDate();
   next();
 });
