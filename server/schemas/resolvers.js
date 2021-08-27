@@ -1,6 +1,6 @@
-const { AuthenticationError } = require('apollo-server-express');
-const { User, Song, Rating } = require('../models');
-const { signToken } = require('../utils/auth');
+const { AuthenticationError } = require("apollo-server-express");
+const { User, Song, Rating } = require("../models");
+const { signToken } = require("../utils/auth");
 
 const resolvers = {
   Query: {
@@ -8,7 +8,9 @@ const resolvers = {
 
     user: async (parent, { username }) => {},
 
-    song: async (parent, { songId }) => {},
+    song: async (parent, { songId }) => {
+      return Song.findOne({ songId });
+    },
   },
 
   Mutation: {
