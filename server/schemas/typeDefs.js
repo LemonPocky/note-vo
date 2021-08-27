@@ -1,10 +1,11 @@
-const { gql } = require('apollo-server-express');
+const { gql } = require("apollo-server-express");
 
 const typeDefs = gql`
   type User {
     _id: ID!
     username: String!
     email: String
+    password: String
     ratings: [Rating]
   }
 
@@ -24,6 +25,7 @@ const typeDefs = gql`
   }
 
   type Rating {
+    _id: ID!
     rating: Int
     song: Song
     user: User
@@ -38,9 +40,14 @@ const typeDefs = gql`
     songId: String!
     title: String
     artists: [String]
-    album: Album
+    album: AlbumInput
     link: String
     previewUrl: String
+  }
+
+  input AlbumInput {
+    title: String
+    image: String
   }
 
   type Query {
