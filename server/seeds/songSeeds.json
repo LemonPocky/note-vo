@@ -1,0 +1,14 @@
+[
+  {
+    "songId": "1",
+    "title": "Song1",
+    "artists": ["Band"],
+    "album": {
+      "title": "first album",
+      "image": "image.jpg"
+    },
+    "link": "web.com",
+    "previewUrl": "fadfsggdsgsf.com",
+    "expiration": "2022-09-17T17:09:38Z"
+  }
+]
