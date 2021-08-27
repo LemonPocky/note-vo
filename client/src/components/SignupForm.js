@@ -1,80 +1,91 @@
-import React, { Component } from "react";
-import { useMutation } from "@apollo/client";
+import React, { useState } from "react";
 
-import Auth from "../utils/auth";
+import {
+  Form,
+  Input,
+  TextArea,
+  Button,
+  Select,
+  Message,
+} from "semantic-ui-react";
 
-import { Form } from "semantic-ui-react";
-
-class SignupForm extends Component {
-  state = {
-    name: "",
+const SignupForm = ({ open, setOpen }) => {
+  const [inputs, setInputs] = useState({
+    username: "",
     password: "",
     email: "",
-    submittedName: "",
-    submittedEmail: "",
-  };
+  });
 
-  handleChange = (e, { name, password, value }) =>
-    this.setState({ [name]: value });
+  const [validEmail, setValidEmail] = useState("");
 
-  handleSubmit = () => {
-    const { name, password, email } = this.state;
-
-    this.setState({
-      submittedName: name,
-      submittedPassword: password,
-      submittedEmail: email,
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setInputs({
+      ...inputs,
+      [name]: value,
     });
   };
 
-  render() {
-    const {
-      username,
-      password,
-      email,
-      submittedName,
-      submittedPassword,
-      submittedEmail,
-    } = this.state;
+  const validateEmail = (email) => {
+    const re =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
 
-    return (
-      <div>
-        <Form onSubmit={this.handleSubmit}>
-          <Form.Group>
-            <Form.Input
-              placeholder="Username"
-              name="username"
-              value={username}
-              onChange={this.handleChange}
-            />
-            <Form.Input
-              placeholder="Password"
-              name="password"
-              value={password}
-              onChange={this.handleChange}
-            />
-            <Form.Input
-              placeholder="Email"
-              name="email"
-              value={email}
-              onChange={this.handleChange}
-            />
-            <Form.Button content="Submit" />
-          </Form.Group>
-        </Form>
-        <strong>onChange:</strong>
-        <pre>{JSON.stringify({ username, password, email }, null, 2)}</pre>
-        <strong>onSubmit:</strong>
-        <pre>
-          {JSON.stringify(
-            { submittedName, submittedPassword, submittedEmail },
-            null,
-            2
-          )}
-        </pre>
-      </div>
-    );
-  }
-}
+  const handleFormSubmit = () => {
+    const validEmail = validateEmail(inputs.email);
+    if (!validEmail) {
+      setValidEmail("error");
 
+      return;
+    } else {
+      setValidEmail("");
+    }
+    console.log(validEmail);
+    setOpen(false);
+  };
+
+  return (
+    <Form>
+      <Form.Group widths="equal">
+        <Form.Field
+          id="form-input-control-username"
+          control={Input}
+          label="Username"
+          placeholder="Username"
+          name="username"
+          value={inputs.username}
+          onChange={(event) => handleInputChange(event)}
+        />
+        <Form.Field
+          id="form-input-control-password"
+          control={Input}
+          type="password"
+          label="Password"
+          placeholder="Password"
+          name="password"
+          value={inputs.password}
+          onChange={(event) => handleInputChange(event)}
+        />
+      </Form.Group>
+
+      <Form.Field
+        id="form-input-control-error-email"
+        control={Input}
+        label="Email"
+        name="email"
+        value={inputs.email}
+        onChange={(event) => handleInputChange(event)}
+        // className={`${validateEmail(inputs.email) ? "" : "error"}`}
+        className={validEmail}
+      />
+      <Form.Field
+        id="form-button-control-public"
+        control={Button}
+        content="Submit"
+        onClick={handleFormSubmit}
+      />
+    </Form>
+  );
+};
 export default SignupForm;

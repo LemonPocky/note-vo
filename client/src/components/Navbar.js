@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
-import { Menu } from 'semantic-ui-react';
-
-import Auth from '../utils/auth';
+import React, { useState } from "react";
+import { Menu, Modal, Message, Button } from "semantic-ui-react";
+import LoginAndSignupModal from "./LoginAndSignupModal";
+import LoginForm from "./LoginForm";
+import SignupForm from "./SignupForm";
+import Auth from "../utils/auth";
 
 const Navbar = () => {
   // Highlights the currently active link
-  const [activeLink, updateActive] = useState('Homepage');
-
+  const [activeLink, updateActive] = useState("Homepage");
+  const [open, setOpen] = useState(false);
   const handleItemClick = (e, { name }) => {
     updateActive(name);
   };
@@ -14,12 +16,7 @@ const Navbar = () => {
   // Logout and navigate back to homepage
   const logout = () => {
     Auth.logout();
-    updateActive('noteVo');
-  };
-
-  // TODO: Update to show the Log In/Sign Up modal
-  const login = () => {
-    alert('Login placeholder.');
+    updateActive("noteVo");
   };
 
   // Render different links depending on login status
@@ -29,7 +26,7 @@ const Navbar = () => {
       <>
         <Menu.Item
           name="myProfile"
-          active={activeLink === 'myProfile'}
+          active={activeLink === "myProfile"}
           //TODO: handle link to own profile?
           href="/profile"
           position="right"
@@ -37,7 +34,7 @@ const Navbar = () => {
         />
         <Menu.Item
           name="logOut"
-          active={activeLink === 'logOut'}
+          active={activeLink === "logOut"}
           onClick={logout}
         />
       </>
@@ -46,9 +43,9 @@ const Navbar = () => {
     navigationLinks = (
       <Menu.Item
         name="login"
-        active={activeLink === 'login'}
+        active={activeLink === "login"}
         position="right"
-        onClick={login}
+        onClick={() => setOpen(true)}
       >
         Log In/Sign Up
       </Menu.Item>
@@ -56,12 +53,16 @@ const Navbar = () => {
   }
 
   return (
-    <Menu size="huge" color="teal" inverted stackable>
-      <Menu.Item header name="noteVo" href="/" onClick={handleItemClick}>
-        NoteVo
-      </Menu.Item>
-      {navigationLinks}
-    </Menu>
+    <>
+      <Menu size="huge" color="teal" inverted stackable>
+        <Menu.Item header name="noteVo" href="/" onClick={handleItemClick}>
+          NoteVo
+        </Menu.Item>
+        {navigationLinks}
+      </Menu>
+
+      <LoginAndSignupModal open={open} setOpen={setOpen} />
+    </>
   );
 };
 
