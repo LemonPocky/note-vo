@@ -1,5 +1,6 @@
 import { Grid, Header, Image } from 'semantic-ui-react';
 import Stars from './Stars';
+import StaticStars from './StaticStars';
 
 const ProfileSongRow = ({ song, rating }) => {
   const updateRating = function (newRating) {
