@@ -12,7 +12,6 @@ function LoginAndSignupModal({ open, setOpen }) {
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
         open={open}
-        // trigger={<Button>Show Modal</Button>}
       >
         <Modal.Header>{showLogin ? "Login" : "Signup"}</Modal.Header>
         <Modal.Content>
