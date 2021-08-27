@@ -1,45 +1,36 @@
 import React, { useState } from "react";
 
 import Auth from "../utils/auth";
-import {
-  Form,
-  Input,
-  TextArea,
-  Button,
-  Select,
-  Message,
-} from "semantic-ui-react";
+import { Form, Input, Button } from "semantic-ui-react";
 
-const LoginForm = () => {
-  const [userFormData, setUserFormData] = useState({
+const LoginForm = ({ open, setOpen }) => {
+  const [inputs, setInputs] = useState({
     username: "",
     password: "",
   });
 
-  const [validated] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
+  const [valid, setValid] = useState("");
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setUserFormData({ ...userFormData, [name]: value });
+    setInputs({ ...inputs, [name]: value });
   };
 
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
+  const handleFormSubmit = () => {
     // TODO Uncomment when mutations are put in
     // try {
     //   const { data } = await login({
     //     variables: { ...userFormData },
     //   });
+
+    //   console.log(data);
     //   Auth.login(data.login.token);
     // } catch (e) {
     //   console.error(e);
     // }
 
-    // check if form has everything (as per react-bootstrap docs)
-
-    event.preventDefault();
-    event.stopPropagation();
+    console.log(inputs);
+    setOpen(false);
   };
   return (
     <Form>
@@ -48,7 +39,9 @@ const LoginForm = () => {
           id="form-input-control-username"
           control={Input}
           label="Username"
-          onChange={handleInputChange}
+          name="username"
+          value={inputs.username}
+          onChange={(event) => handleInputChange(event)}
           placeholder="Username"
           required
         />
@@ -56,7 +49,10 @@ const LoginForm = () => {
           id="form-input-control-password"
           control={Input}
           label="Password"
-          onChange={handleInputChange}
+          type="password"
+          name="password"
+          value={inputs.password}
+          onChange={(event) => handleInputChange(event)}
           placeholder="Password"
           required
         />
@@ -66,6 +62,7 @@ const LoginForm = () => {
         id="form-button-control-public"
         control={Button}
         content="Submit"
+        onClick={handleFormSubmit}
       />
     </Form>
   );
