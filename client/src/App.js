@@ -1,11 +1,16 @@
-
+import React from "react";
+import "semantic-ui-css/semantic.min.css";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Homepage from "./pages/Homepage";
+import Profile from "./pages/Profile";
+import { setContext } from "@apollo/client/link/context";
 import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
   createHttpLink,
 } from "@apollo/client";
-import Modal from "./components/Modal";
 
 const httpLink = createHttpLink({
   uri: "/graphql",
@@ -33,10 +38,11 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <>
-          <Navbar />
           <Switch>
             {/* <Route exact path="/" component={Homepage} /> */}
-            <Route exact path="/"></Route>
+            <Route exact path="/">
+              <Navbar />
+            </Route>
             <Route exact path="/profile">
               <Profile />
             </Route>

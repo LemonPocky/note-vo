@@ -3,8 +3,7 @@ import { Button, Header, Image, Modal, Message } from "semantic-ui-react";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 
-function LoginAndSignupModal() {
-  const [open, setOpen] = useState(false);
+function LoginAndSignupModal({ open, setOpen }) {
   const [showLogin, setShowLogin] = useState(true);
 
   return (
@@ -13,11 +12,15 @@ function LoginAndSignupModal() {
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
         open={open}
-        trigger={<Button>Show Modal</Button>}
+        // trigger={<Button>Show Modal</Button>}
       >
         <Modal.Header>{showLogin ? "Login" : "Signup"}</Modal.Header>
         <Modal.Content>
-          {showLogin ? <LoginForm /> : <SignupForm />}
+          {showLogin ? (
+            <LoginForm />
+          ) : (
+            <SignupForm open={open} setOpen={setOpen} />
+          )}
           <Message>
             {showLogin ? "New to us? " : "Already have an account? "}
 
