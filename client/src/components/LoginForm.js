@@ -1,12 +1,20 @@
 import React, { useState } from "react";
-import { useMutation } from "@apollo/client";
-import { Button, Header, Image, Modal } from "semantic-ui-react";
+
 import Auth from "../utils/auth";
+import {
+  Form,
+  Input,
+  TextArea,
+  Button,
+  Select,
+  Message,
+} from "semantic-ui-react";
 
 const LoginForm = () => {
-  const [userFormData, setUserFormData] = useState({ email: "", password: "" });
-
-  const [login, { error, data }] = useMutation();
+  const [userFormData, setUserFormData] = useState({
+    username: "",
+    password: "",
+  });
 
   const [validated] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -18,37 +26,48 @@ const LoginForm = () => {
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
-
-    try {
-      const { data } = await login({
-        variables: { ...userFormData },
-      });
-      Auth.login(data.login.token);
-    } catch (e) {
-      console.error(e);
-    }
+    // TODO Uncomment when mutations are put in
+    // try {
+    //   const { data } = await login({
+    //     variables: { ...userFormData },
+    //   });
+    //   Auth.login(data.login.token);
+    // } catch (e) {
+    //   console.error(e);
+    // }
 
     // check if form has everything (as per react-bootstrap docs)
 
     event.preventDefault();
     event.stopPropagation();
   };
-
   return (
-    <>
-      <form class="ui form">
-        <div class="field">
-          <label>Username</label>
-          <input type="text" name="username" placeholder="Username"></input>
-        </div>{" "}
-        <div class="field">
-          <label>Password</label>
-          <input type="password" name="password" placeholder="Password"></input>
-        </div>
-      </form>
-      ;
-    </>
+    <Form>
+      <Form.Group widths="equal">
+        <Form.Field
+          id="form-input-control-username"
+          control={Input}
+          label="Username"
+          onChange={handleInputChange}
+          placeholder="Username"
+          required
+        />
+        <Form.Field
+          id="form-input-control-password"
+          control={Input}
+          label="Password"
+          onChange={handleInputChange}
+          placeholder="Password"
+          required
+        />
+      </Form.Group>
+
+      <Form.Field
+        id="form-button-control-public"
+        control={Button}
+        content="Submit"
+      />
+    </Form>
   );
 };
-
 export default LoginForm;

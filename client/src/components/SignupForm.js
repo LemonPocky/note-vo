@@ -1,111 +1,91 @@
-const SignupForm = () => {
-  // set initial form state
-  const [userFormData, setUserFormData] = useState({
+import React, { useState } from "react";
+
+import {
+  Form,
+  Input,
+  TextArea,
+  Button,
+  Select,
+  Message,
+} from "semantic-ui-react";
+
+const SignupForm = ({ open, setOpen }) => {
+  const [inputs, setInputs] = useState({
     username: "",
-    email: "",
     password: "",
+    email: "",
   });
-  const [signupUser, { error, data }] = useMutation(SIGNUP_USER);
-  // set state for form validation
-  const [validated] = useState(false);
-  // set state for alert
-  const [showAlert, setShowAlert] = useState(false);
+
+  const [validEmail, setValidEmail] = useState("");
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setUserFormData({ ...userFormData, [name]: value });
+    setInputs({
+      ...inputs,
+      [name]: value,
+    });
   };
 
-  const handleFormSubmit = async (event) => {
-    event.preventDefault();
+  const validateEmail = (email) => {
+    const re =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+  };
 
-    try {
-      const { data } = await signupUser({
-        variables: { ...userFormData },
-      });
-      Auth.login(data.addUser.token);
-    } catch (e) {
-      console.error(e);
+  const handleFormSubmit = () => {
+    const validEmail = validateEmail(inputs.email);
+    if (!validEmail) {
+      setValidEmail("error");
+
+      return;
+    } else {
+      setValidEmail("");
     }
-
-    event.preventDefault();
-    event.stopPropagation();
+    console.log(validEmail);
+    setOpen(false);
   };
 
   return (
-    <>
-      {/* This is needed for the validation functionality above */}
-      <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
-        {/* show alert if server response is bad */}
-        <Alert
-          dismissible
-          onClose={() => setShowAlert(false)}
-          show={showAlert}
-          variant="danger"
-        >
-          Something went wrong with your signup!
-        </Alert>
+    <Form>
+      <Form.Group widths="equal">
+        <Form.Field
+          id="form-input-control-username"
+          control={Input}
+          label="Username"
+          placeholder="Username"
+          name="username"
+          value={inputs.username}
+          onChange={(event) => handleInputChange(event)}
+        />
+        <Form.Field
+          id="form-input-control-password"
+          control={Input}
+          type="password"
+          label="Password"
+          placeholder="Password"
+          name="password"
+          value={inputs.password}
+          onChange={(event) => handleInputChange(event)}
+        />
+      </Form.Group>
 
-        <Form.Group>
-          <Form.Label htmlFor="username">Username</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Your username"
-            name="username"
-            onChange={handleInputChange}
-            value={userFormData.username}
-            required
-          />
-          <Form.Control.Feedback type="invalid">
-            Username is required!
-          </Form.Control.Feedback>
-        </Form.Group>
-
-        <Form.Group>
-          <Form.Label htmlFor="email">Email</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Your email address"
-            name="email"
-            onChange={handleInputChange}
-            value={userFormData.email}
-            required
-          />
-          <Form.Control.Feedback type="invalid">
-            Email is required!
-          </Form.Control.Feedback>
-        </Form.Group>
-
-        <Form.Group>
-          <Form.Label htmlFor="password">Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Your password"
-            name="password"
-            onChange={handleInputChange}
-            value={userFormData.password}
-            required
-          />
-          <Form.Control.Feedback type="invalid">
-            Password is required!
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Button
-          disabled={
-            !(
-              userFormData.username &&
-              userFormData.email &&
-              userFormData.password
-            )
-          }
-          type="submit"
-          variant="success"
-        >
-          Submit
-        </Button>
-      </Form>
-    </>
+      <Form.Field
+        id="form-input-control-error-email"
+        control={Input}
+        label="Email"
+        name="email"
+        value={inputs.email}
+        onChange={(event) => handleInputChange(event)}
+        // className={`${validateEmail(inputs.email) ? "" : "error"}`}
+        className={validEmail}
+      />
+      <Form.Field
+        id="form-button-control-public"
+        control={Button}
+        content="Submit"
+        onClick={handleFormSubmit}
+      />
+    </Form>
   );
 };
-
 export default SignupForm;
