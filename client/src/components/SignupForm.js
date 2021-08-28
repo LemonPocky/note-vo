@@ -12,8 +12,7 @@ const SignupForm = () => {
     email: "",
     password: "",
   });
-  // set state for form validation
-  const [validated] = useState(false);
+
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
 
@@ -35,13 +34,6 @@ const SignupForm = () => {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    // check if form has everything (as per react-bootstrap docs)
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
     try {
       const { data } = await addUser({
         variables: { ...inputs },
@@ -60,7 +52,7 @@ const SignupForm = () => {
   };
 
   return (
-    <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
+    <Form onSubmit={handleFormSubmit}>
       {showAlert && (
         <Message
           color="red"

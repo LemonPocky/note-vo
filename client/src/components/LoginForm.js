@@ -8,7 +8,7 @@ const LoginForm = ({ open, setOpen }) => {
     username: "",
     password: "",
   });
-  const [validated] = useState(false);
+
   const [showAlert, setShowAlert] = useState(false);
   const [login, { error }] = useMutation(LOGIN_USER);
 
@@ -28,13 +28,6 @@ const LoginForm = ({ open, setOpen }) => {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-    // TODO Uncomment when mutations are put in
-
     try {
       const { data } = await login({
         variables: { ...inputs },
@@ -46,11 +39,10 @@ const LoginForm = ({ open, setOpen }) => {
       console.error(e);
     }
 
-    console.log(inputs);
     setOpen(false);
   };
   return (
-    <Form noValidate validated={validated} onSubmit={handleFormSubmit}>
+    <Form onSubmit={handleFormSubmit}>
       {showAlert && (
         <Message
           color="red"
