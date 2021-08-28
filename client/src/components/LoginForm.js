@@ -1,39 +1,57 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
+import { LOGIN_USER } from "../utils/mutations";
 import Auth from "../utils/auth";
-import { Form, Input, Button } from "semantic-ui-react";
-
+import { Form, Input, Button, Message } from "semantic-ui-react";
+import { useMutation } from "@apollo/client";
 const LoginForm = ({ open, setOpen }) => {
   const [inputs, setInputs] = useState({
     username: "",
     password: "",
   });
 
-  const [valid, setValid] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [login, { error }] = useMutation(LOGIN_USER);
+
+  useEffect(() => {
+    if (error) {
+      setShowAlert(true);
+    } else {
+      setShowAlert(false);
+    }
+  }, [error]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setInputs({ ...inputs, [name]: value });
   };
 
-  const handleFormSubmit = () => {
-    // TODO Uncomment when mutations are put in
-    // try {
-    //   const { data } = await login({
-    //     variables: { ...userFormData },
-    //   });
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
 
-    //   console.log(data);
-    //   Auth.login(data.login.token);
-    // } catch (e) {
-    //   console.error(e);
-    // }
+    try {
+      const { data } = await login({
+        variables: { ...inputs },
+      });
 
-    console.log(inputs);
+      console.log(data);
+      Auth.login(data.login.token);
+    } catch (e) {
+      console.error(e);
+    }
+
     setOpen(false);
   };
   return (
-    <Form>
+    <Form onSubmit={handleFormSubmit}>
+      {showAlert && (
+        <Message
+          color="red"
+          onDismiss={() => setShowAlert(false)}
+          header="Authentication Error"
+          content="Something went wrong with your login credentials!"
+        />
+      )}
+
       <Form.Group widths="equal">
         <Form.Field
           id="form-input-control-username"

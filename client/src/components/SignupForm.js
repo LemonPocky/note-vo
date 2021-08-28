@@ -1,45 +1,66 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useMutation } from "@apollo/client";
 
-import { Form, Input, Button } from "semantic-ui-react";
+import { Form, Input, Button, Message } from "semantic-ui-react";
+import { ADD_USER } from "../utils/mutations";
+import Auth from "../utils/auth";
 
-const SignupForm = ({ open, setOpen }) => {
-  const [inputs, setInputs] = useState({
+const SignupForm = () => {
+  // set initial form state
+  const [inputs, setinputs] = useState({
     username: "",
-    password: "",
     email: "",
+    password: "",
   });
 
-  const [validEmail, setValidEmail] = useState("");
+  // set state for alert
+  const [showAlert, setShowAlert] = useState(false);
+
+  const [addUser, { error }] = useMutation(ADD_USER);
+
+  useEffect(() => {
+    if (error) {
+      setShowAlert(true);
+    } else {
+      setShowAlert(false);
+    }
+  }, [error]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setInputs({
-      ...inputs,
-      [name]: value,
+    setinputs({ ...inputs, [name]: value });
+  };
+
+  const handleFormSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const { data } = await addUser({
+        variables: { ...inputs },
+      });
+      console.log(data);
+      Auth.login(data.addUser.token);
+    } catch (err) {
+      console.error(err);
+    }
+
+    setinputs({
+      username: "",
+      email: "",
+      password: "",
     });
   };
 
-  const validateEmail = (email) => {
-    const re =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
-  };
-
-  const handleFormSubmit = () => {
-    const validEmail = validateEmail(inputs.email);
-    if (!validEmail) {
-      setValidEmail("error");
-
-      return;
-    } else {
-      setValidEmail("");
-    }
-    console.log(inputs);
-    setOpen(false);
-  };
-
   return (
-    <Form>
+    <Form onSubmit={handleFormSubmit}>
+      {showAlert && (
+        <Message
+          color="red"
+          onDismiss={() => setShowAlert(false)}
+          header="Authentication Error"
+          content="Something went wrong with your signup!"
+        />
+      )}
       <Form.Group widths="equal">
         <Form.Field
           id="form-input-control-username"
@@ -49,6 +70,7 @@ const SignupForm = ({ open, setOpen }) => {
           name="username"
           value={inputs.username}
           onChange={(event) => handleInputChange(event)}
+          required
         />
         <Form.Field
           id="form-input-control-password"
@@ -59,6 +81,7 @@ const SignupForm = ({ open, setOpen }) => {
           name="password"
           value={inputs.password}
           onChange={(event) => handleInputChange(event)}
+          required
         />
       </Form.Group>
 
@@ -69,8 +92,7 @@ const SignupForm = ({ open, setOpen }) => {
         name="email"
         value={inputs.email}
         onChange={(event) => handleInputChange(event)}
-        // className={`${validateEmail(inputs.email) ? "" : "error"}`}
-        className={validEmail}
+        required
       />
       <Form.Field
         id="form-button-control-public"
