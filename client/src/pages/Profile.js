@@ -29,7 +29,11 @@ const Profile = () => {
 
   return (
     <>
-      <Header as="h1">Hello {user.username}!</Header>
+      {Auth.loggedIn() && Auth.getProfile().data.username === userParam ? (
+        <Header as="h1">Hello {user.username}!</Header>
+      ) : (
+        <Header as="h1">{user.username}'s Profile</Header>
+      )}
 
       <Grid container textAlign="center" celled="internally">
         <Divider horizontal>Recently Rated Songs</Divider>

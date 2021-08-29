@@ -72,6 +72,10 @@ const resolvers = {
           { rating: rating }
         );
 
+        if (context.user._id !== newRating.user) {
+          throw new AuthenticationError('Not logged in as that user!');
+        }
+
         return newRating;
       }
       throw new AuthenticationError('You need to be logged in!');

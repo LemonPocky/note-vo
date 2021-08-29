@@ -13,6 +13,7 @@ const ProfileSongRow = ({ rating }) => {
 
   useEffect(() => {
     if (error) {
+      console.log(error);
       setShowAlert(true);
     } else {
       setShowAlert(false);
@@ -20,15 +21,15 @@ const ProfileSongRow = ({ rating }) => {
   }, [error]);
 
   const updateRating = async function (newRating) {
-    await editRating({
-      variables: {
-        ratingId: rating._id,
-        rating: newRating,
-      },
-    });
-    if (!error) {
+    try {
+      await editRating({
+        variables: {
+          ratingId: rating._id,
+          rating: newRating,
+        },
+      });
       setEditSuccess(true);
-    }
+    } catch (error) {}
   };
 
   let albumImage = `${process.env.PUBLIC_URL}/images/placeholder-square.jpg`;
@@ -58,8 +59,8 @@ const ProfileSongRow = ({ rating }) => {
           <Message
             color="red"
             onDismiss={() => setShowAlert(false)}
-            header="Error"
-            content="Could not edit rating. Try again later."
+            header="Failed to edit rating."
+            content={error?.message}
           />
         )}
       </Grid.Column>
