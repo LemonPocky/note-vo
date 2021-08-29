@@ -4,8 +4,6 @@ const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
-    me: async (parent, args, context) => {},
-
     user: async (parent, { username }) => {
       const userData = await User.findOne({ username: username }).select(
         '-__v -password'
@@ -52,16 +50,19 @@ const resolvers = {
           user: context.user._id,
         });
 
-        await User.findOneAndUpdate(
+        newRating.user = await User.findOneAndUpdate(
           { _id: context.user._id },
           { $addToSet: { ratings: newRating._id } }
         );
+
+        newRating.song = await Song.findById(songId);
+        return newRating;
       }
       throw new AuthenticationError('You need to be logged in!');
     },
 
     addSong: (parent, args) => {
-      return Song.create({ ...args });
+      return Song.create({ ...args.song });
     },
   },
 };
