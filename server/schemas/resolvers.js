@@ -5,9 +5,12 @@ const { signToken } = require('../utils/auth');
 const resolvers = {
   Query: {
     user: async (parent, { username }) => {
-      const userData = await User.findOne({ username: username }).select(
-        '-__v -password'
-      );
+      const userData = await User.findOne({ username: username })
+        .select('-__v -password')
+        .populate({
+          path: 'ratings',
+          populate: 'song',
+        });
 
       return userData;
     },

@@ -2,7 +2,9 @@ import { Grid, Header, Image } from 'semantic-ui-react';
 import Stars from './Stars';
 import StaticStars from './StaticStars';
 
-const ProfileSongRow = ({ song, rating }) => {
+const ProfileSongRow = ({ rating }) => {
+  const song = rating.song;
+
   const updateRating = function (newRating) {
     alert(`Updating rating!
 RatingId: ${rating._id}

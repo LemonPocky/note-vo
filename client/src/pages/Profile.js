@@ -23,25 +23,6 @@ const Profile = () => {
 
   const user = data?.user || {};
 
-  const songData = {
-    songId: 'abc123',
-    title: 'Craxx traxxxx',
-    artists: ['C-Show', 't+pazolite'],
-    album: {
-      title: 'Lite Show Magic',
-    },
-    link: 'https://www.youtube.com/watch?v=hjVJhsyNI8A',
-    previewUrl: 'https://www.youtube.com/watch?v=hjVJhsyNI8A',
-    expiration: new Date(1930018869797),
-  };
-
-  const ratingData = {
-    _id: 'foobar',
-    rating: 4,
-    song: songData,
-    user: user,
-  };
-
   if (loading) {
     return <h1>Loading data...</h1>;
   }
@@ -52,7 +33,9 @@ const Profile = () => {
 
       <Grid container textAlign="center" celled="internally">
         <Divider horizontal>Recently Rated Songs</Divider>
-        <ProfileSongRow song={songData} rating={ratingData} />
+        {user.ratings.map((rating) => (
+          <ProfileSongRow key={rating._id} rating={rating} />
+        ))}
       </Grid>
     </>
   );

@@ -6,6 +6,7 @@ export const QUERY_USER_PROFILE = gql`
       username
       email
       ratings {
+        _id
         rating
         song {
           title
