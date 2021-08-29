@@ -1,14 +1,32 @@
-import { Grid, Header, Image } from 'semantic-ui-react';
+import { useState, useEffect } from 'react';
+import { useMutation } from '@apollo/client';
+import { Grid, Header, Image, Message } from 'semantic-ui-react';
+import { EDIT_RATING } from '../utils/mutations';
 import Stars from './Stars';
 import StaticStars from './StaticStars';
 
 const ProfileSongRow = ({ rating }) => {
   const song = rating.song;
+  const [showAlert, setShowAlert] = useState(false);
+  const [editSuccess, setEditSuccess] = useState(false);
+  const [editRating, { error }] = useMutation(EDIT_RATING);
 
-  const updateRating = function (newRating) {
-    alert(`Updating rating!
-RatingId: ${rating._id}
-New Rating: ${newRating}`);
+  useEffect(() => {
+    if (error) {
+      setShowAlert(true);
+    } else {
+      setShowAlert(false);
+    }
+  }, [error]);
+
+  const updateRating = async function (newRating) {
+    await editRating({
+      variables: {
+        ratingId: rating._id,
+        rating: newRating,
+      },
+    });
+    setEditSuccess(true);
   };
 
   let albumImage = `${process.env.PUBLIC_URL}/images/placeholder-square.jpg`;
@@ -29,6 +47,19 @@ New Rating: ${newRating}`);
       <Grid.Column>
         <Header as="h5">My Rating</Header>
         <Stars initialRating={rating.rating} onUpdateRating={updateRating} />
+        {editSuccess && (
+          <Header size="tiny" color="green">
+            Rating updated successfully.
+          </Header>
+        )}
+        {showAlert && (
+          <Message
+            color="red"
+            onDismiss={() => setShowAlert(false)}
+            header="Error"
+            content="Could not edit rating. Try again later."
+          />
+        )}
       </Grid.Column>
     </Grid.Row>
   );

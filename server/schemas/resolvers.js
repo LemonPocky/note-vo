@@ -64,6 +64,19 @@ const resolvers = {
       throw new AuthenticationError('You need to be logged in!');
     },
 
+    // Edit an existing rating in the database
+    editRating: async (parent, { ratingId, rating }, context) => {
+      if (context.user) {
+        const newRating = await Rating.findOneAndUpdate(
+          { _id: ratingId },
+          { rating: rating }
+        );
+
+        return newRating;
+      }
+      throw new AuthenticationError('You need to be logged in!');
+    },
+
     addSong: (parent, args) => {
       return Song.create({ ...args.song });
     },
