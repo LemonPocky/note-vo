@@ -26,7 +26,9 @@ const ProfileSongRow = ({ rating }) => {
         rating: newRating,
       },
     });
-    setEditSuccess(true);
+    if (!error) {
+      setEditSuccess(true);
+    }
   };
 
   let albumImage = `${process.env.PUBLIC_URL}/images/placeholder-square.jpg`;
