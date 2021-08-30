@@ -1,46 +1,65 @@
 [
-  {
-    "songId": "4gMgiXfqyzZLMhsksGmbQV",
-    "title": "Another Brick in the Wall, Pt. 2",
-    "artists": ["Pink Floyd"],
-    "album": {
-      "title": "The Wall",
-      "image": "https://i.scdn.co/image/ab67616d00001e02288d32d88a616b9a278ddc07"
+  [
+    {
+      "songId": "4gMgiXfqyzZLMhsksGmbQV",
+      "title": "Another Brick in the Wall, Pt. 2",
+      "artists": ["Pink Floyd"],
+      "album": {
+        "title": "The Wall",
+        "image": "https://i.scdn.co/image/ab67616d00001e02288d32d88a616b9a278ddc07"
+      },
+      "link": "https://api.spotify.com/v1/tracks/4gMgiXfqyzZLMhsksGmbQV",
+      "previewUrl": "https://p.scdn.co/mp3-preview/92210b01fcc6efa80008663c158baf79cf0d7b5f?cid=774b29d4f13844c495f206cafdad9c86"
     },
-    "link": "https://api.spotify.com/v1/tracks/4gMgiXfqyzZLMhsksGmbQV",
-    "previewUrl": "https://p.scdn.co/mp3-preview/92210b01fcc6efa80008663c158baf79cf0d7b5f?cid=774b29d4f13844c495f206cafdad9c86"
-  },
-  {
-    "songId": "4cOdK2wGLETKBW3PvgPWqT",
-    "title": "Never Gonna Give You Up",
-    "artists": ["Rick Astley"],
-    "album": {
-      "title": "Whenever You Need Somebody",
-      "image": "https://i.scdn.co/image/ab67616d00001e025755e164993798e0c9ef7d7a"
+    {
+      "songId": "4cOdK2wGLETKBW3PvgPWqT",
+      "title": "Never Gonna Give You Up",
+      "artists": ["Rick Astley"],
+      "album": {
+        "title": "Whenever You Need Somebody",
+        "image": "https://i.scdn.co/image/ab67616d00001e025755e164993798e0c9ef7d7a"
+      },
+      "link": "https://api.spotify.com/v1/tracks/4cOdK2wGLETKBW3PvgPWqT",
+      "previewUrl": "https://p.scdn.co/mp3-preview/0b6da17f858f104337fac626c4bac972d3947564?cid=774b29d4f13844c495f206cafdad9c86"
     },
-    "link": "https://api.spotify.com/v1/tracks/4cOdK2wGLETKBW3PvgPWqT",
-    "previewUrl": "https://p.scdn.co/mp3-preview/0b6da17f858f104337fac626c4bac972d3947564?cid=774b29d4f13844c495f206cafdad9c86"
-  },
-  {
-    "songId": "3TBRJsLCcwroEkA3tD4u2N",
-    "title": "Der Kommissar",
-    "artists": ["Falco"],
-    "album": {
-      "title": "Einzelhaft",
-      "image": "https://i.scdn.co/image/ab67616d00001e0249512287075ab421f6d4a61a"
+    {
+      "songId": "3TBRJsLCcwroEkA3tD4u2N",
+      "title": "Der Kommissar",
+      "artists": ["Falco"],
+      "album": {
+        "title": "Einzelhaft",
+        "image": "https://i.scdn.co/image/ab67616d00001e0249512287075ab421f6d4a61a"
+      },
+      "link": "https://api.spotify.com/v1/tracks/3TBRJsLCcwroEkA3tD4u2N",
+      "previewUrl": "https://p.scdn.co/mp3-preview/e1dfc36f8f9071b850e666dc0ce636cba234da48?cid=774b29d4f13844c495f206cafdad9c86"
     },
-    "link": "https://api.spotify.com/v1/tracks/3TBRJsLCcwroEkA3tD4u2N",
-    "previewUrl": "https://p.scdn.co/mp3-preview/e1dfc36f8f9071b850e666dc0ce636cba234da48?cid=774b29d4f13844c495f206cafdad9c86"
-  },
-  {
-    "songId": "0DiWol3AO6WpXZgp0goxAV",
-    "title": "One More Time",
-    "artists": ["Daft Punk"],
-    "album": {
-      "title": "Discovery",
-      "image": "https://i.scdn.co/image/ab67616d00001e02b33d46dfa2635a47eebf63b2"
+    {
+      "songId": "0DiWol3AO6WpXZgp0goxAV",
+      "title": "One More Time",
+      "artists": ["Daft Punk"],
+      "album": {
+        "title": "Discovery",
+        "image": "https://i.scdn.co/image/ab67616d00001e02b33d46dfa2635a47eebf63b2"
+      },
+      "link": "https://api.spotify.com/v1/tracks/0DiWol3AO6WpXZgp0goxAV",
+      "previewUrl": "https://p.scdn.co/mp3-preview/3ecb663d7dc9123a847a000e6febd6c852eeb994?cid=774b29d4f13844c495f206cafdad9c86"
+    }
+  ],
+  [
+    {
+      "rating": 5,
+      "song": "Another Brick in the Wall, Pt. 2",
+      "user": "user123"
     },
-    "link": "https://api.spotify.com/v1/tracks/0DiWol3AO6WpXZgp0goxAV",
-    "previewUrl": "https://p.scdn.co/mp3-preview/3ecb663d7dc9123a847a000e6febd6c852eeb994?cid=774b29d4f13844c495f206cafdad9c86"
-  }
+    {
+      "rating": 3,
+      "song": "One More Time",
+      "user": "Kent Beck"
+    },
+    {
+      "rating": 2,
+      "song": "Der Kommissar",
+      "user": "Horse Von Hay"
+    }
+  ]
 ]
