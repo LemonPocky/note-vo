@@ -1,4 +1,4 @@
-const { AuthenticationError } = require('apollo-server-express');
+const { AuthenticationError, ApolloError } = require('apollo-server-express');
 const { User, Song, Rating } = require('../models');
 const { signToken } = require('../utils/auth');
 
@@ -78,16 +78,19 @@ const resolvers = {
     // Edit an existing rating in the database
     editRating: async (parent, { ratingId, rating }, context) => {
       if (context.user) {
-        const newRating = await Rating.findOneAndUpdate(
-          { _id: ratingId },
-          { rating: rating }
-        );
+        const oldRating = await Rating.findById(ratingId);
 
-        if (context.user._id !== newRating.user) {
+        if (!oldRating) {
+          throw new ApolloError('That rating does not exist!');
+        }
+
+        if (context.user._id != oldRating.user) {
           throw new AuthenticationError('Not logged in as that user!');
         }
 
-        return newRating;
+        await oldRating.update({ rating: rating });
+
+        return await Rating.findById(ratingId);
       }
       throw new AuthenticationError('You need to be logged in!');
     },
