@@ -22,7 +22,10 @@ const resolvers = {
     },
 
     searchSpotify: async (parent, { query }) => {
-      return spotifyClientInstance.search({ query });
+      console.log(query);
+    
+      const resultObject = await spotifyClientInstance.search(query);
+      return JSON.stringify(resultObject);
     }
 
     

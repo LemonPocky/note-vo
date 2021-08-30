@@ -24,9 +24,9 @@ class SpotifyClient {
   }
 
   async fetchToken() {
-    const result = await this.client.clientCredentialsGrant();
-    const { access_token } = result.body;
-    this.client.setAccessToken(access_token);
+      const result = await this.client.clientCredentialsGrant();
+      const { access_token } = result.body;
+      this.client.setAccessToken(access_token);
   }
 
   async search(query, failed = 0) {

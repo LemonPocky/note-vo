@@ -33,6 +33,7 @@ const Homepage = () => {
 
   const [saveSong, { error: mutationError }] = useMutation(EDIT_RATING);
 
+
   // useEffect hook to save `savedSongIds` list to localStorage on component unmount
  
   useEffect(() => {
@@ -40,38 +41,47 @@ const Homepage = () => {
   });
 
   // method to search for songs and set state upon form submission 
+
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
     if (!searchInput) {
       return false;
     }
+    
+    console.log(searchInput);
+    await getSearchResults({
+        variables: { query: searchInput },
+      });
+    
+      const user = data?.user || {};
+      
+      if (loading) {
+          return <h1>Loading data...</h1>;
+        }
+                    
+        if (data) {
+            const response = JSON.parse(data.searchSpotify);
+                console.log(response);
+                const { items } = response.body.tracks;
+            
+                const songData = items.map((song) => ({
+                  songId: song.id,
 
-    try {
-      const response = await getSearchResults(searchInput);
+                  artists: song.artists?.map((artist) => {
+                    return artist.name
+                  }),
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
 
-      const { items } = await response.json();
 
-      const songData = items.map((song) => ({
-        songId: song.id,
-        artist: song.artist || ['No artist found'],
-        title: song.title,
-        image: song.image,
-        description: song.description,
-        // figure out album link
-        // image: song.albumimage || '', 
-      }));
-
-      setSearchedSongs(songData);
-      setSearchInput('');
-    } catch (err) {
-      console.error(err);
-    }
-  };
+                  title: song.name,
+                //   image: song.image || '',
+                }));
+            
+                setSearchedSongs(songData);
+                setSearchInput('');
+        }
+    };
 
   // function to handle saving a song to our database
   const handleSaveSong = async (songId) => {
@@ -134,7 +144,7 @@ const Homepage = () => {
                 ) : null}
                 <Card.Body>
                   <Card.Title>{song.title}</Card.Title>
-                  <p className="small">Artist: {song.artists}</p>
+                  <p className="small">Artist: {song.artists.join(", ")}</p>
                   <Card.Text>{song.description}</Card.Text>
                   {Auth.loggedIn() && (
                     <Button
