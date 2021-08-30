@@ -24,6 +24,25 @@ export const LOGIN_USER = gql`
   }
 `;
 
+export const ADD_SONG = gql`
+  mutation addSong($song: SongInput) {
+    addSong(song: $song) {
+      _id
+      songId
+      title
+      artists
+    }
+  }
+`;
+
+export const ADD_RATING = gql`
+  mutation addRating($songId: String!, $rating: Int!) {
+    addRating(songId: $songId, rating: $rating) {
+      _id
+    }
+  }
+`;
+
 export const EDIT_RATING = gql`
   mutation editRating($ratingId: ID!, $rating: Int!) {
     editRating(ratingId: $ratingId, rating: $rating) {

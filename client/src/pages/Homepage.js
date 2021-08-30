@@ -9,92 +9,95 @@ import {
   CardColumns,
 } from 'react-bootstrap';
 
-
-
 import Auth from '../utils/auth';
 import { useMutation, useLazyQuery } from '@apollo/client';
-import { saveSongIds, getSavedSongIds } from '../utils/localStorage';
-import { EDIT_RATING } from '../utils/mutations';
+import Stars from '../components/Stars';
+import { ADD_RATING, ADD_SONG, EDIT_RATING } from '../utils/mutations';
 import { QUERY_SPOTIFY_SONG } from '../utils/queries';
-
-
-
 
 const Homepage = () => {
   // state for holding returned spotify api data
   const [searchedSongs, setSearchedSongs] = useState([]);
   // lazyquery for getting search results
-  const [getSearchResults, { loading, error, data }] = useLazyQuery(QUERY_SPOTIFY_SONG);
+  const [getSearchResults, { loading, spotifySearchError, data }] =
+    useLazyQuery(QUERY_SPOTIFY_SONG);
+  const [addSong, { addSongError }] = useMutation(ADD_SONG);
+  const [addRating, { addRatingError }] = useMutation(ADD_RATING);
   // state for holding our search field data
   const [searchInput, setSearchInput] = useState('');
 
-  // create state to hold saved songId values
-  const [savedSongIds, setSavedSongIds] = useState(getSavedSongIds());
-
-  const [saveSong, { error: mutationError }] = useMutation(EDIT_RATING);
-
-
-  // useEffect hook to save `savedSongIds` list to localStorage on component unmount
- 
+  // Log errors if they happen
   useEffect(() => {
-    return () => saveSongIds(savedSongIds);
-  });
+    if (addSongError) {
+      console.log(addSongError);
+    }
+  }, [addSongError]);
+  // Log errors if they happen
+  useEffect(() => {
+    if (addRatingError) {
+      console.log(addRatingError);
+    }
+  }, [addRatingError]);
 
-  // method to search for songs and set state upon form submission 
-
+  // method to search for songs and set state upon form submission
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
     if (!searchInput) {
       return false;
     }
-    
+
     console.log(searchInput);
     await getSearchResults({
-        variables: { query: searchInput },
+      variables: { query: searchInput },
+    });
+    if (loading) {
+      return <h1>Loading data...</h1>;
+    }
+
+    if (data) {
+      const response = JSON.parse(data.searchSpotify);
+      console.log(response);
+      const { items } = response.body.tracks;
+
+      const songData = items.map((song) => {
+        const newSong = {
+          songId: song.id,
+          artists: song.artists?.map((artist) => {
+            return artist.name;
+          }),
+          title: song.name,
+          album: {
+            title: song.album?.name,
+            image: song.album?.images ? song.album.images[0].url : '',
+          },
+          link: song.href,
+          previewUrl: song.preview_url,
+        };
+
+        return newSong;
       });
-    
-      const user = data?.user || {};
-      
-      if (loading) {
-          return <h1>Loading data...</h1>;
+
+      // Update these song, or add these song
+      // to the database if it doesn't already exist
+      // TODO: hacky, pls fix
+      for (let i = 0; i < songData.length; i++) {
+        const newSong = songData[i];
+        try {
+          const addedToDatabaseSong = await addSong({
+            variables: {
+              song: newSong,
+            },
+          });
+          // Get the id of the song in the database
+          newSong._id = addedToDatabaseSong.data.addSong._id;
+          songData[i] = newSong;
+        } catch (error) {
+          console.log(JSON.stringify(error, null, 2));
         }
-                    
-        if (data) {
-            const response = JSON.parse(data.searchSpotify);
-                console.log(response);
-                const { items } = response.body.tracks;
-            
-                const songData = items.map((song) => ({
-                  songId: song.id,
-
-                  artists: song.artists?.map((artist) => {
-                    return artist.name
-                  }),
-
-
-
-                  title: song.name,
-                //   image: song.image || '',
-                }));
-            
-                setSearchedSongs(songData);
-                setSearchInput('');
-        }
-    };
-
-  // function to handle saving a song to our database
-  const handleSaveSong = async (songId) => {
-    // find song in `searchedSongs` state by matching id
-    const songToSave = searchedSongs.find((song) => song.songId === songId);
-
-    try {
-      await saveSong({
-        variables: { input: songToSave },
-      });
-      setSavedSongIds([...savedSongIds, songToSave.songId]);
-    } catch (err) {
-      console.error(err);
+      }
+      setSearchedSongs(songData);
+      setSearchInput('');
     }
   };
 
@@ -134,7 +137,7 @@ const Homepage = () => {
         <CardColumns>
           {searchedSongs.map((song) => {
             return (
-              <Card key={song.songId} border="dark">
+              <Card key={song._id} border="dark">
                 {song.image ? (
                   <Card.Img
                     src={song.image}
@@ -144,22 +147,23 @@ const Homepage = () => {
                 ) : null}
                 <Card.Body>
                   <Card.Title>{song.title}</Card.Title>
-                  <p className="small">Artist: {song.artists.join(", ")}</p>
+                  <p className="small">Artist: {song.artists.join(', ')}</p>
                   <Card.Text>{song.description}</Card.Text>
                   {Auth.loggedIn() && (
-                    <Button
-                      disabled={savedSongIds?.some(
-                        (savedSongId) => savedSongId === song.songId
-                      )}
-                      className="btn-block btn-info"
-                      onClick={() => handleSaveSong(song.songId)}
-                    >
-                      {savedSongIds?.some(
-                        (savedSongId) => savedSongId === song.songId
-                      )
-                        ? 'This song has already been saved!'
-                        : 'Save this Song!'}
-                    </Button>
+                    <Stars
+                      initialRating={0}
+                      // function to handle saving a song to our database
+                      onUpdateRating={async (newRating) => {
+                        try {
+                          await addRating({
+                            variables: { songId: song._id, rating: newRating },
+                          });
+                          console.log(`Rating updated: ${newRating}`);
+                        } catch (error) {
+                          console.log(JSON.stringify(error, null, 2));
+                        }
+                      }}
+                    />
                   )}
                 </Card.Body>
               </Card>

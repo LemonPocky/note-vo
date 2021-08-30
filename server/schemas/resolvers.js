@@ -2,13 +2,12 @@ const { AuthenticationError } = require('apollo-server-express');
 const { User, Song, Rating } = require('../models');
 const { signToken } = require('../utils/auth');
 
-const { SpotifyClient } = require("../utils/spotifyAPI");
+const { SpotifyClient } = require('../utils/spotifyAPI');
 
 const spotifyClientInstance = new SpotifyClient();
 
 const resolvers = {
   Query: {
-
     user: async (parent, { username }) => {
       const userData = await User.findOne({ username: username }).select(
         '-__v -password'
@@ -22,13 +21,9 @@ const resolvers = {
     },
 
     searchSpotify: async (parent, { query }) => {
-      console.log(query);
-    
       const resultObject = await spotifyClientInstance.search(query);
       return JSON.stringify(resultObject);
-    }
-
-    
+    },
   },
 
   Mutation: {
@@ -64,7 +59,7 @@ const resolvers = {
           user: context.user._id,
         });
 
-        await User.findOneAndUpdate(
+        return await User.findOneAndUpdate(
           { _id: context.user._id },
           { $addToSet: { ratings: newRating._id } }
         );
@@ -72,8 +67,16 @@ const resolvers = {
       throw new AuthenticationError('You need to be logged in!');
     },
 
-    addSong: (parent, args) => {
-      return Song.create({ ...args });
+    addSong: async (parent, { song }) => {
+      const toReturn = await Song.findOneAndUpdate(
+        { songId: song.songId },
+        { ...song },
+        {
+          new: true,
+          upsert: true,
+        }
+      );
+      return toReturn;
     },
   },
 };
