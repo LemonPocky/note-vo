@@ -23,22 +23,5 @@
     "username": "Horse Von Hay",
     "email": "test4@email.com",
     "password": "password05"
-  },
-  [
-    {
-      "rating": 5,
-      "song": "Another Brick in the Wall, Pt. 2",
-      "user": "user123"
-    },
-    {
-      "rating": 3,
-      "song": "One More Time",
-      "user": "Kent Beck"
-    },
-    {
-      "rating": 2,
-      "song": "Der Kommissar",
-      "user": "Horse Von Hay"
-    }
-  ]
+  }
 ]
