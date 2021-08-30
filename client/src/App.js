@@ -55,6 +55,9 @@ function App() {
         h3 {
         letter-spacing: 0.2em;  
         }
+        div{
+          padding-bottom: 8px;
+        }
 
         .container {
           background-color: #282828;
