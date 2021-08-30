@@ -38,10 +38,62 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <>
+        <style type="text/css">
+            {`
+            
+        h1, h2, h3 {
+        font-family: 'Courier New';
+        color: white;
+        }
+        body {
+        background-color: #282828;
+        }
+        h1, h2 {
+        letter-spacing: 0.1em;  
+        }
+
+        h3 {
+        letter-spacing: 0.2em;  
+        }
+        div{
+          padding-bottom: 8px;
+        }
+
+        .container {
+          background-color: #282828;
+          color: #1DB954;
+          font-size: 2rem;
+          display: inline-block;
+          margin:  0.25rem;
+          padding:  1rem;
+          width:  100%; 
+          
+        }
+
+        .col {
+          background-color: #282828;
+        }
+
+        .header {
+        background-size: cover;
+        padding: 4rem 2rem;
+        text-align: left;
+        grid-area: header;
+        }
+
+        .header {
+        font-size: 2rem;
+        padding-bottom: 1rem;
+        }
+        .btn-success {
+            background-color: #1DB954;
+            color: white;
+          }
+        `}
+  </style>
           <Navbar />
           <Switch>
-            {/* <Route exact path="/" component={Homepage} /> */}
-            <Route exact path="/"></Route>
+            <Route exact path="/" component={Homepage} />
             <Route exact path="/profile">
               <Profile />
             </Route>

@@ -2,6 +2,10 @@ const { AuthenticationError } = require('apollo-server-express');
 const { User, Song, Rating } = require('../models');
 const { signToken } = require('../utils/auth');
 
+const { SpotifyClient } = require('../utils/spotifyAPI');
+
+const spotifyClientInstance = new SpotifyClient();
+
 const resolvers = {
   Query: {
     user: async (parent, { username }) => {
@@ -10,6 +14,11 @@ const resolvers = {
         .populate({
           path: 'ratings',
           populate: 'song',
+          options: {
+            sort: {
+              _id: -1,
+            },
+          },
         });
 
       return userData;
@@ -17,6 +26,11 @@ const resolvers = {
 
     song: async (parent, { songId }) => {
       return Song.findOne({ songId });
+    },
+
+    searchSpotify: async (parent, { query }) => {
+      const resultObject = await spotifyClientInstance.search(query);
+      return JSON.stringify(resultObject);
     },
   },
 
@@ -53,13 +67,10 @@ const resolvers = {
           user: context.user._id,
         });
 
-        newRating.user = await User.findOneAndUpdate(
+        return await User.findOneAndUpdate(
           { _id: context.user._id },
           { $addToSet: { ratings: newRating._id } }
         );
-
-        newRating.song = await Song.findById(songId);
-        return newRating;
       }
       throw new AuthenticationError('You need to be logged in!');
     },
@@ -81,8 +92,16 @@ const resolvers = {
       throw new AuthenticationError('You need to be logged in!');
     },
 
-    addSong: (parent, args) => {
-      return Song.create({ ...args.song });
+    addSong: async (parent, { song }) => {
+      const toReturn = await Song.findOneAndUpdate(
+        { songId: song.songId },
+        { ...song },
+        {
+          new: true,
+          upsert: true,
+        }
+      );
+      return toReturn;
     },
   },
 };

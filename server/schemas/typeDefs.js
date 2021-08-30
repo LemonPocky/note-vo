@@ -10,6 +10,7 @@ const typeDefs = gql`
   }
 
   type Song {
+    _id: ID!
     songId: String!
     title: String
     artists: [String]
@@ -51,8 +52,10 @@ const typeDefs = gql`
   }
 
   type Query {
+    me: User
     user(username: String!): User
     song(songId: String): Song
+    searchSpotify(query: String): String
   }
 
   type Mutation {

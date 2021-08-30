@@ -32,6 +32,10 @@ const ProfileSongRow = ({ rating }) => {
     } catch (error) {}
   };
 
+  if (!song) {
+    return <></>;
+  }
+
   let albumImage = `${process.env.PUBLIC_URL}/images/placeholder-square.jpg`;
   if (song.album.image) {
     albumImage = song.album.image;
@@ -40,7 +44,14 @@ const ProfileSongRow = ({ rating }) => {
   return (
     <Grid.Row columns={3}>
       <Grid.Column>
-        <Image src={albumImage} size="small" centered />
+        <Image
+          src={albumImage}
+          as="a"
+          href={song.link}
+          target="_blank"
+          size="small"
+          centered
+        />
       </Grid.Column>
       <Grid.Column>
         <Header as="h2">{song.title}</Header>

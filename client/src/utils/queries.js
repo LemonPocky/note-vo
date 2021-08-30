@@ -39,3 +39,9 @@ export const QUERY_SONG = gql`
     }
   }
 `;
+
+export const QUERY_SPOTIFY_SONG = gql`
+  query searchSpotify($query: String) {
+    searchSpotify(query: $query)
+  }
+`;

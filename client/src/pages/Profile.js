@@ -29,6 +29,29 @@ const Profile = () => {
 
   return (
     <>
+     <style type="text/css">
+            {`
+            
+       
+
+        .ui.header {
+        font-family: "Courier New";
+        padding-bottom: 1rem;
+        margin: 1rem;
+        background-color: #282828;
+        color: #1DB954;
+        }
+        .ui.horizontal.divider {
+          font-family: "Courier New";
+          font-size: 2rem;
+        padding-bottom: 1rem;
+        background-color: #282828;
+        color: #1DB954;
+        }
+        
+        `}
+  </style>
+    
       {Auth.loggedIn() && Auth.getProfile().data.username === userParam ? (
         <Header as="h1">Hello {user.username}!</Header>
       ) : (
