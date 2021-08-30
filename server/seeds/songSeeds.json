@@ -44,22 +44,5 @@
       "link": "https://api.spotify.com/v1/tracks/0DiWol3AO6WpXZgp0goxAV",
       "previewUrl": "https://p.scdn.co/mp3-preview/3ecb663d7dc9123a847a000e6febd6c852eeb994?cid=774b29d4f13844c495f206cafdad9c86"
     }
-  ],
-  [
-    {
-      "rating": 5,
-      "song": "Another Brick in the Wall, Pt. 2",
-      "user": "user123"
-    },
-    {
-      "rating": 3,
-      "song": "One More Time",
-      "user": "Kent Beck"
-    },
-    {
-      "rating": 2,
-      "song": "Der Kommissar",
-      "user": "Horse Von Hay"
-    }
   ]
 ]
