@@ -62,6 +62,7 @@ const typeDefs = gql`
     addUser(username: String!, email: String!, password: String!): Auth
     login(username: String!, password: String!): Auth
     addRating(songId: String!, rating: Int!): Rating
+    editRating(ratingId: ID!, rating: Int!): Rating
     addSong(song: SongInput): Song
   }
 `;

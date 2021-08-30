@@ -9,9 +9,17 @@ const spotifyClientInstance = new SpotifyClient();
 const resolvers = {
   Query: {
     user: async (parent, { username }) => {
-      const userData = await User.findOne({ username: username }).select(
-        '-__v -password'
-      );
+      const userData = await User.findOne({ username: username })
+        .select('-__v -password')
+        .populate({
+          path: 'ratings',
+          populate: 'song',
+          options: {
+            sort: {
+              _id: -1,
+            },
+          },
+        });
 
       return userData;
     },
@@ -63,6 +71,23 @@ const resolvers = {
           { _id: context.user._id },
           { $addToSet: { ratings: newRating._id } }
         );
+      }
+      throw new AuthenticationError('You need to be logged in!');
+    },
+
+    // Edit an existing rating in the database
+    editRating: async (parent, { ratingId, rating }, context) => {
+      if (context.user) {
+        const newRating = await Rating.findOneAndUpdate(
+          { _id: ratingId },
+          { rating: rating }
+        );
+
+        if (context.user._id !== newRating.user) {
+          throw new AuthenticationError('Not logged in as that user!');
+        }
+
+        return newRating;
       }
       throw new AuthenticationError('You need to be logged in!');
     },

@@ -14,6 +14,7 @@ import { useMutation, useLazyQuery } from '@apollo/client';
 import Stars from '../components/Stars';
 import { ADD_RATING, ADD_SONG, EDIT_RATING } from '../utils/mutations';
 import { QUERY_SPOTIFY_SONG } from '../utils/queries';
+import { Link } from 'react-router-dom';
 
 const Homepage = () => {
   // state for holding returned spotify api data
@@ -71,10 +72,9 @@ const Homepage = () => {
             title: song.album?.name,
             image: song.album?.images ? song.album.images[0].url : '',
           },
-          link: song.href,
+          link: song.external_urls.spotify,
           previewUrl: song.preview_url,
         };
-
         return newSong;
       });
 
@@ -138,12 +138,15 @@ const Homepage = () => {
           {searchedSongs.map((song) => {
             return (
               <Card key={song._id} border="dark">
-                {song.image ? (
-                  <Card.Img
-                    src={song.image}
-                    alt={`The cover for ${song.title}`}
-                    variant="top"
-                  />
+                {song.album.image ? (
+                  <a href={song.link} target="_blank" rel="noreferrer">
+                    <Card.Img
+                      src={song.album.image}
+                      alt={`The cover for ${song.title}`}
+                      variant="top"
+                      width="300px"
+                    />
+                  </a>
                 ) : null}
                 <Card.Body>
                   <Card.Title>{song.title}</Card.Title>
@@ -158,7 +161,6 @@ const Homepage = () => {
                           await addRating({
                             variables: { songId: song._id, rating: newRating },
                           });
-                          console.log(`Rating updated: ${newRating}`);
                         } catch (error) {
                           console.log(JSON.stringify(error, null, 2));
                         }
