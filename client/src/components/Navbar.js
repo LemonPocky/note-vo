@@ -54,8 +54,8 @@ const Navbar = () => {
 
   return (
     <>
-      <Menu size="huge" color="teal" inverted stackable>
-        <Menu.Item header name="noteVo" href="/" onClick={handleItemClick}>
+      <Menu size="huge" color="#282828"  inverted stackable>
+        <Menu.Item header name="noteVo"  href="/" onClick={handleItemClick}>
           NoteVo
         </Menu.Item>
         {navigationLinks}
